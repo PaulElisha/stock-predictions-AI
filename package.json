@@ -2,22 +2,25 @@
   "name": "stock-predictions-ai",
   "version": "1.0.0",
   "main": "app.js",
+  "type": "module",
   "repository": "git@github.com:PaulElisha/klaytn-feedelegation-hook.git",
   "author": "Paul Elisha <ireajao@yahoo.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js",
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
     "clean": "rm -rf",
     "clear-cache": "rm -rf node_modules/.cache",
+    "install-legacy": "npm install --legacy-peer-deps",
     "git-refresh-case": "git rm --cached -r . || true && git add -A && git commit -m \"chore: refresh case-sensitive filenames\" || true",
-    "git-clear-case": "git rm --cached constants/constants.js 2>/dev/null || true && git add constants/Constants.js"
+    "git-clear-case": "git rm --cached constants/Constants.js 2>/dev/null || true && git add constants/Constants.js"
   },
   "devDependencies": {
     "dotenv": "^17.2.3",
     "nodemon": "^3.1.11"
   },
   "dependencies": {
+    "express": "^5.1.0",
     "mongoose": "^8.19.3"
   }
 }

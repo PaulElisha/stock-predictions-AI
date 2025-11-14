@@ -1,11 +1,20 @@
 /** @format */
 
+import express from "express";
+
+import { ConnectDb } from "./config/ConnectDb.js";
+import { port, hostName } from "./constants/Constants.js";
+
 class App {
-  constructor() {}
+  constructor() {
+    this.app = express();
+    this.db = new ConnectDb();
+  }
 
   startServer() {
-    this.app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
+    this.db.connect();
+    this.app.listen(port, () => {
+      console.log(`Server is running on port ${port} at ${hostName}`);
     });
   }
 }
