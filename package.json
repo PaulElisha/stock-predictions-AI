@@ -1,0 +1,11 @@
+{
+  "name": "klaytn-feedelegation-hook",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/PaulElisha/klaytn-feedelegation-hook.git",
+  "author": "Paul Elisha <ireajao@yahoo.com>",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^17.2.3"
+  }
+}
