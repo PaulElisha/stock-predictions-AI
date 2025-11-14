@@ -5,8 +5,16 @@
   "repository": "git@github.com:PaulElisha/klaytn-feedelegation-hook.git",
   "author": "Paul Elisha <ireajao@yahoo.com>",
   "license": "MIT",
+  "scripts": {
+    "clean": "rm -rf",
+    "clear-cache": "rm -rf node_modules/.cache",
+    "git-refresh-case": "git rm --cached -r . || true && git add -A && git commit -m \"chore: refresh case-sensitive filenames\" || true"
+  },
   "devDependencies": {
     "dotenv": "^17.2.3",
     "nodemon": "^3.1.11"
+  },
+  "dependencies": {
+    "mongoose": "^8.19.3"
   }
 }
