@@ -6,9 +6,12 @@
   "author": "Paul Elisha <ireajao@yahoo.com>",
   "license": "MIT",
   "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
     "clean": "rm -rf",
     "clear-cache": "rm -rf node_modules/.cache",
-    "git-refresh-case": "git rm --cached -r . || true && git add -A && git commit -m \"chore: refresh case-sensitive filenames\" || true"
+    "git-refresh-case": "git rm --cached -r . || true && git add -A && git commit -m \"chore: refresh case-sensitive filenames\" || true",
+    "git-clear-case": "git rm --cached constants/constants.js 2>/dev/null || true && git add constants/Constants.js"
   },
   "devDependencies": {
     "dotenv": "^17.2.3",

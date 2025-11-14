@@ -1,7 +1,7 @@
 /** @format */
 
 import mongoose from "mongoose";
-import { mongoURI } from "../constants/Constants.js";
+import { mongoURI } from "../constants/Constants";
 
 class ConnectDb {
   constructor() {
