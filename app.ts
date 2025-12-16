@@ -2,7 +2,7 @@
 
 import express from "express";
 import type { Express } from "express";
-
+import cors from "cors";
 import { Db } from "./src/config/db.config.ts";
 import { port, hostName } from "./src/constants/constants.ts";
 import { errorHandler } from "./src/middlewares/errorHandler.middleware.ts";
@@ -23,6 +23,11 @@ class App {
   initializeMiddleware() {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(
+      cors({
+        origin: "*",
+      })
+    );
   }
 
   initializeRoutes() {

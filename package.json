@@ -19,6 +19,7 @@
   "devDependencies": {
     "@tsconfig/node18": "^18.2.6",
     "@types/axios": "^0.9.36",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/mongodb": "^4.0.6",
     "@types/mongoose": "^5.11.96",
@@ -30,6 +31,7 @@
   "dependencies": {
     "@mistralai/mistralai": "^1.10.0",
     "axios": "^1.13.2",
+    "cors": "^2.8.5",
     "express": "^5.1.0",
     "mongodb": "^6.21.0",
     "mongoose": "^8.19.3"
