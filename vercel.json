@@ -3,12 +3,7 @@
     "rewrites": [
         {
             "source": "/(.*)",
-            "destination": "/dist/app.js"
+            "destination": "/api/index"
         }
-    ],
-    "functions": {
-        "dist/app.js": {
-            "includeFiles": "dist/**"
-        }
-    }
+    ]
 }

@@ -7,10 +7,10 @@
   "author": "Paul Elisha <ireajao@yahoo.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node dist/app.js",
-    "build": "esbuild app.ts --bundle --platform=node --target=node18 --format=esm --packages=external --outfile=dist/app.js",
+    "start": "node api/index.js",
+    "build": "esbuild app.ts --bundle --platform=node --target=node18 --format=esm --packages=external --outfile=api/index.js",
     "dev": "tsx watch app.ts",
-    "clean": "rm -rf dist",
+    "clean": "rm -rf api",
     "clear-cache": "rm -rf node_modules/.cache",
     "install-legacy": "npm install --legacy-peer-deps",
     "git-refresh-case": "git rm --cached -r . || true && git add -A && git commit -m \"chore: refresh case-sensitive filenames\" || true",
