@@ -3,11 +3,12 @@
     "compilerOptions": {
         "rootDir": ".",
         "outDir": "dist",
-        "emitDeclarationOnly": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "declaration": true,
-        "allowImportingTsExtensions": true
+        "moduleResolution": "NodeNext",
+        "module": "NodeNext",
+        "target": "ES2022"
     },
     "include": [
         "src/**/*.ts",
@@ -15,6 +16,7 @@
     ],
     "exclude": [
         "node_modules",
-        "dist"
+        "dist",
+        "src/workers"
     ]
 }
