@@ -43,14 +43,5 @@ class App {
   }
 }
 
-const appInstance = new App();
-const app = appInstance.app;
-
-// Only start the server if this file is the main entry point (not imported by Vercel)
-// In Vercel, we export the app to be used as a serverless function
-if (import.meta.url === `file://${process.argv[1]}`) {
-  appInstance.startServer();
-}
-
-export default app;
-export { app };
+const app = new App();
+app.startServer();

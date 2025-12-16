@@ -2,6 +2,7 @@
     "extends": "@tsconfig/node18/tsconfig.json",
     "compilerOptions": {
         "rootDir": ".",
+        "outDir": "dist",
         "noEmit": true,
         "allowImportingTsExtensions": true,
         "emitDecoratorMetadata": true,
