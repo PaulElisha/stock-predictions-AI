@@ -2,10 +2,10 @@
     "extends": "@tsconfig/node18/tsconfig.json",
     "compilerOptions": {
         "rootDir": ".",
-        "outDir": "dist",
+        "noEmit": true,
+        "allowImportingTsExtensions": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "declaration": true,
         "moduleResolution": "NodeNext",
         "module": "NodeNext",
         "target": "ES2022"
