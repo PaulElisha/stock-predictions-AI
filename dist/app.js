@@ -398,5 +398,13 @@ var App = class {
     });
   }
 };
-var app = new App();
-app.startServer();
+var appInstance = new App();
+var app = appInstance.app;
+if (import.meta.url === `file://${process.argv[1]}`) {
+  appInstance.startServer();
+}
+var app_default = app;
+export {
+  app,
+  app_default as default
+};
