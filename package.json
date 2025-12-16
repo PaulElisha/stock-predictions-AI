@@ -1,9 +1,9 @@
 {
   "name": "stock-predictions-ai",
   "version": "1.0.0",
-  "main": "app.ts",
+  "main": "dist/app.js",
   "type": "module",
-  "repository": "git@github.com:PaulElisha/stock-predictions-ai.git",
+  "repository": "https://github.com/PaulElisha/stock-predictions-ai.git",
   "author": "Paul Elisha <ireajao@yahoo.com>",
   "license": "MIT",
   "scripts": {
