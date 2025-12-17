@@ -5,6 +5,11 @@ import { mongoURI } from "../constants/constants.ts";
 
 class Db {
   connect() {
+    if (!mongoURI) {
+      console.warn("MongoDB URI not configured, skipping database connection");
+      return;
+    }
+
     try {
       mongoose.connect(mongoURI);
 
@@ -13,11 +18,11 @@ class Db {
       });
 
       mongoose.connection.on("error", (err) => {
-        console.error("Error connection failed:", err.message);
+        console.error("MongoDB connection error:", err.message);
       });
     } catch (error) {
       console.error("Error connecting to MongoDB:", error);
-      process.exit(1);
+      // Don't exit in serverless environments
     }
   }
 }
