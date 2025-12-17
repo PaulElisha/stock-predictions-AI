@@ -2,7 +2,7 @@
 
 import dotenv from "dotenv";
 dotenv.config({ path: ".env" });
-import type { EnvConfig } from "../types/config/env-config.types.ts";
+import type { EnvConfig } from "../types/config/env-config.types.js";
 
 const getEnvConfig = (): EnvConfig => {
   const getEnv = (key: string, defaultValue: string = ""): string => {
@@ -19,7 +19,7 @@ const getEnvConfig = (): EnvConfig => {
   return {
     PORT: getEnv("PORT", "3000"),
     HOST_NAME: getEnv("HOST_NAME", "http://localhost"),
-    MONGODB_URI: getEnv("MONGODB_URI"),
+    MONGODB_URI: getEnv("MONGODB_URI", "mongodb://localhost:27017/"),
     OPENAI_API_KEY: getEnv("OPENAI_API_KEY"),
     POLYGON_API_KEY: getEnv("POLYGON_API_KEY"),
     POLYGON_BASE_URL: getEnv("POLYGON_BASE_URL", "https://api.polygon.io"),

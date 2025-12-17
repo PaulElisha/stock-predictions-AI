@@ -1,7 +1,7 @@
 /** @format */
 
-import { envConfig } from "../config/env.config.ts";
-import { Dates } from "../utils/Dates.ts";
+import { envConfig } from "../config/env.config.js";
+import { Dates } from "../utils/Dates.js";
 
 export const port = envConfig.PORT;
 export const hostName = envConfig.HOST_NAME;

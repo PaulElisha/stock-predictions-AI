@@ -3,11 +3,11 @@
 import express from "express";
 import type { Express } from "express";
 import cors from "cors";
-import { Db } from "./config/db.config.ts";
-import { port, hostName } from "./constants/constants.ts";
-import { errorHandler } from "./middlewares/errorHandler.middleware.ts";
+import { Db } from "./config/db.config.js";
+import { port, hostName } from "./constants/constants.js";
+import { errorHandler } from "./middlewares/errorHandler.middleware.js";
 
-import { stockPredictionRouter } from "./routes/stock-prediction.route.ts";
+import { stockPredictionRouter } from "./routes/stock-prediction.route.js";
 
 class App {
   public app: Express;

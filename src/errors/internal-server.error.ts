@@ -1,10 +1,10 @@
 /** @format */
 
-import { AppError } from "./app.error.ts";
-import { ErrorCodeType } from "../enums/error-code.enum.ts";
-import { HttpStatusCodeType } from "../config/http.config.ts";
-import { HTTP_STATUS } from "../config/http.config.ts";
-import { ErrorCode } from "../enums/error-code.enum.ts";
+import { AppError } from "./app.error.js";
+import { ErrorCodeType } from "../enums/error-code.enum.js";
+import { HttpStatusCodeType } from "../config/http.config.js";
+import { HTTP_STATUS } from "../config/http.config.js";
+import { ErrorCode } from "../enums/error-code.enum.js";
 
 export class InternalServerError extends AppError {
   constructor(

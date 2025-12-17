@@ -1,15 +1,15 @@
 /** @format */
 
 import axios from "axios";
-import { openAIWorkerUrl, polygonWorkerUrl } from "../constants/constants.ts";
-import type { StockDataParam } from "../types/paramters/parameters.types.ts";
-import { messages } from "../utils/messages.utils.ts";
-import { InternalServerError } from "../errors/internal-server.error.ts";
-import { HTTP_STATUS } from "../config/http.config.ts";
-import { ErrorCode } from "../enums/error-code.enum.ts";
-import { BadRequestExceptionError } from "../errors/bad-request.error.ts";
-import { AppError } from "../errors/app.error.ts";
-import { Dates } from "../utils/Dates.ts";
+import { openAIWorkerUrl, polygonWorkerUrl } from "../constants/constants.js";
+import type { StockDataParam } from "../types/paramters/parameters.types.js";
+import { messages } from "../utils/messages.utils.js";
+import { InternalServerError } from "../errors/internal-server.error.js";
+import { HTTP_STATUS } from "../config/http.config.js";
+import { ErrorCode } from "../enums/error-code.enum.js";
+import { BadRequestExceptionError } from "../errors/bad-request.error.js";
+import { AppError } from "../errors/app.error.js";
+import { Dates } from "../utils/Dates.js";
 
 class StockPredictionService {
   public fetchStockData = async (param: StockDataParam): Promise<any> => {

@@ -4,7 +4,7 @@ import { Router } from "express";
 import {
   StockPredictionController,
   StockPredictionControllerInstance,
-} from "../controllers/stock-prediction.controller.ts";
+} from "../controllers/stock-prediction.controller.js";
 
 class StockPredictionRoute {
   private stockPredictionController: StockPredictionControllerInstance;

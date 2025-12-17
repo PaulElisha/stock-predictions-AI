@@ -1,14 +1,14 @@
 /** @format */
 
-import { HTTP_STATUS } from "../config/http.config.ts";
+import { HTTP_STATUS } from "../config/http.config.js";
 import { Request, Response } from "express";
 import {
   StockPredictionService,
   StockPredictionServiceInstance,
-} from "../services/stock-prediction.service.ts";
-import { ErrorCode } from "../enums/error-code.enum.ts";
-import { AppError } from "../errors/app.error.ts";
-import { BadRequestExceptionError } from "../errors/bad-request.error.ts";
+} from "../services/stock-prediction.service.js";
+import { ErrorCode } from "../enums/error-code.enum.js";
+import { AppError } from "../errors/app.error.js";
+import { BadRequestExceptionError } from "../errors/bad-request.error.js";
 
 class StockPredictionController {
   private stockPredictionService: StockPredictionServiceInstance;
