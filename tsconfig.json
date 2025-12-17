@@ -1,7 +1,6 @@
 {
     "extends": "@tsconfig/node18/tsconfig.json",
     "compilerOptions": {
-        "rootDir": "./src",
         "outDir": "./dist",
         "noEmit": true,
         "allowImportingTsExtensions": true,
@@ -9,10 +8,12 @@
         "experimentalDecorators": true,
         "moduleResolution": "NodeNext",
         "module": "NodeNext",
-        "target": "ES2022"
+        "target": "ES2022",
+        "allowJs": true
     },
     "include": [
         "src/**/*.ts",
+        "api/**/*.ts",
         "@types/**/*.ts"
     ],
     "exclude": [
