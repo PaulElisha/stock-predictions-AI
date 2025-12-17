@@ -1,11 +1,12 @@
 /** @format */
 
 import mongoose from "mongoose";
-import { mongoURI } from "../constants/constants.js";
 
 class Db {
   connect() {
-    if (!mongoURI) {
+    const mongoURI = process.env.MONGODB_URI || "mongodb://localhost:27017/";
+
+    if (!mongoURI || mongoURI === "mongodb://localhost:27017/") {
       console.warn("MongoDB URI not configured, skipping database connection");
       return;
     }

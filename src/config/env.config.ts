@@ -1,7 +1,5 @@
 /** @format */
 
-import dotenv from "dotenv";
-dotenv.config({ path: ".env" });
 import type { EnvConfig } from "../types/config/env-config.types.js";
 
 const getEnvConfig = (): EnvConfig => {
