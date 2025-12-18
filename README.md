@@ -4,6 +4,15 @@
 
 A powerful full-stack application that leverages Artificial Intelligence to analyze stock market data and generate performance reports. This project uses a microservices-inspired architecture with an Express.js backend and Cloudflare Workers for efficient data fetching and AI processing.
 
+Production API:
+- Base URL: https://stock-predictions-ai.vercel.app/
+
+Public route prefix:
+- All API routes are mounted under /api
+
+Quick example:
+- Health/Root: GET https://stock-predictions-ai.vercel.app/api
+
 ## 🚀 Features
 
 - **Stock Data Retrieval**: Fetches real-time/historical stock data using Polygon.io (via a dedicated Cloudflare Worker).
@@ -66,6 +75,67 @@ Ensure you have the following installed:
     ```
 
 ## 📦 Installation & Running
+
+## 🌐 Deployed API & Usage
+
+Base URL
+- https://stock-predictions-ai.vercel.app/
+- All endpoints are under the /api route
+
+Endpoints
+- GET /api
+  - Description: Basic health/root endpoint of the API. Useful to verify deployment.
+  - cURL:
+    ```bash
+    curl -i https://stock-predictions-ai.vercel.app/api
+    ```
+
+- POST /api/stock-prediction
+  - Description: Generate a stock performance report with AI based on parameters.
+  - Request Body (JSON):
+    ```json
+    {
+      "ticker": ["AAPL", "MSFT"],
+      "dates": {
+        "startDate": "2024-12-01",
+        "endDate": "2024-12-15"
+      }
+    }
+    ```
+    - ticker: Array of stock ticker symbols (string[]; at least one required)
+    - dates.startDate: Start date in YYYY-MM-DD (string)
+    - dates.endDate: End date in YYYY-MM-DD (string)
+  - cURL example:
+    ```bash
+    curl -i \
+      -X POST \
+      -H "Content-Type: application/json" \
+      -d '{
+        "ticker": ["AAPL", "MSFT"],
+        "dates": {
+          "startDate": "2024-12-01",
+          "endDate": "2024-12-15"
+        }
+      }' \
+      https://stock-predictions-ai.vercel.app/api/stock-prediction
+    ```
+  - Notes:
+    - The backend orchestrates calls to Polygon and AI Workers. If those workers are not available or environment variables are not configured, this endpoint may return an error.
+
+- Example Response
+  - A successful response generally includes a generated summary/analysis and possibly structured metrics. The exact schema may evolve; an example shape:
+    ```json
+    {
+      "ticker": ["AAPL", "MSFT"],
+      "dates": { "startDate": "2024-12-01", "endDate": "2024-12-15" },
+      "analysis": "AI-generated performance summary...",
+      "data": { "ohlc": [/* ... */] }
+    }
+    ```
+
+Common cURL tips
+- Add -s for silent, -S to show errors, and -w "\n" to append newline to output.
+- For JSON pretty-printing locally: pipe to jq, e.g., ... | jq .
 
 ### 1. Backend Server
 
