@@ -40,7 +40,7 @@ class StockPredictionController {
           ErrorCode.RESOURCE_NOT_FOUND
         );
       }
-      console.log("Report data", reportData);
+      console.log("Report data", reportData.toString("\n\n\n"));
 
       return res
         .status(HTTP_STATUS.OK)
