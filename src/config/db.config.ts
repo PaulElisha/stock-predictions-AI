@@ -1,10 +1,10 @@
-/** @format */
+  /** @format */
 
 import mongoose from "mongoose";
-import { mongoURI } from "../constants/constants.ts";
+import { mongoURI } from "../constants/constants.js";
 
 class Db {
-  connect() {
+  connect() { 
     try {
       mongoose.connect(mongoURI);
 

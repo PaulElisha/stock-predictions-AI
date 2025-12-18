@@ -1,9 +1,9 @@
 /** @format */
 
-import { envConfig } from "../config/env.config.ts";
+import { envConfig } from "../config/env.config.js";
 
 export const port = envConfig.PORT;
-export const hostName = envConfig.HOST_NAME;
+export const hostName = envConfig.HOST_NAME;        
 export const mongoURI = envConfig.MONGODB_URI;
 export const openAIApiKey = envConfig.OPENAI_API_KEY;
 export const polygonApiKey = envConfig.POLYGON_API_KEY;
