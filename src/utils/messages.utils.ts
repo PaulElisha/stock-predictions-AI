@@ -8,7 +8,7 @@ CRITICAL RULES:
 1. Analyze ONLY these tickers: ${data
       .map((stock: { ticker: string }) => stock.ticker)
       .join(", ")}
-2. NEVER mention NVDA or AMZN unless they appear in the list above
+2. Mention any ticker that appear in the list above but never analyze any ticker that has no data provided
 3. Use ONLY the price data from the provided results arrays
 4. Generate a report based on the data provided with clear buy/hold/sell recommendations
 
