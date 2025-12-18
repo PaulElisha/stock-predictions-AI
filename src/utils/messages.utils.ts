@@ -8,7 +8,7 @@ CRITICAL RULES:
 1. Analyze ONLY these tickers: ${data
       .map((stock: { ticker: string }) => stock.ticker)
       .join(", ")}
-2. Mention any ticker that appear in the list above but never analyze any ticker that has no data provided
+2. NEVER mention any ticker unless they appear in the list above
 3. Use ONLY the price data from the provided results arrays
 4. Generate a report based on the data provided with clear buy/hold/sell recommendations
 
