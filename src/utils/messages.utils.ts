@@ -1,19 +1,88 @@
 /** @format */
 
-export const messages = (data: any) => [
-  {
-    role: "system",
-    content:
-      "You are a trading guru. Given data on share prices over the past 3 days, write a report of no more than 150 words describing the stocks performance and recommending whether to buy, hold or sell. Use the examples provided between ### to set the style your response.",
-  },
-  {
-    role: "user",
-    content: `${data}
-            ###
-            OK baby, hold on tight! You are going to haate this! Over the past three days, Tesla (TSLA) shares have plummetted. The stock opened at $223.98 and closed at $202.11 on the third day, with some jumping around in the meantime. This is a great time to buy, baby! But not a great time to sell! But I'm not done! Apple (AAPL) stocks have gone stratospheric! This is a seriously hot stock right now. They opened at $166.38 and closed at $182.89 on day three. So all in all, I would hold on to Tesla shares tight if you already have them - they might bounce right back up and head to the stars! They are volatile stock, so expect the unexpected. For APPL stock, how much do you need the money? Sell now and take the profits or hang on and wait for more! If it were me, I would hang on because this stock is on fire right now!!! Apple are throwing a Wall Street party and y'all invited!
-            ###
-            Apple (AAPL) is the supernova in the stock sky – it shot up from $150.22 to a jaw-dropping $175.36 by the close of day three. We’re talking about a stock that’s hotter than a pepper sprout in a chilli cook-off, and it’s showing no signs of cooling down! If you’re sitting on AAPL stock, you might as well be sitting on the throne of Midas. Hold on to it, ride that rocket, and watch the fireworks, because this baby is just getting warmed up! Then there’s Meta (META), the heartthrob with a penchant for drama. It winked at us with an opening of $142.50, but by the end of the thrill ride, it was at $135.90, leaving us a little lovesick. It’s the wild horse of the stock corral, bucking and kicking, ready for a comeback. META is not for the weak-kneed So, sugar, what’s it going to be? For AAPL, my advice is to stay on that gravy train. As for META, keep your spurs on and be ready for the rally.
-            ###
-            `,
-  },
-];
+export const messages = (data: any[]) => {
+  const enhancedData = data.map((stock: any) => {
+    const results = stock.results || [];
+    const closes = results.map((r: any) => r.c);
+    const volumes = results.map((r: any) => r.v);
+
+    return {
+      ticker: stock.ticker,
+      summary: {
+        periods: results.length,
+        trend: calculateTrend(closes),
+        volatility: calculateVolatility(results),
+        volume_profile:
+          volumes.length > 0
+            ? `Avg volume: ${Math.round(average(volumes)).toLocaleString()}`
+            : "No volume data",
+      },
+    };
+  });
+
+  return [
+    {
+      role: "system",
+      content: `# QUANTITATIVE EQUITY ANALYST - PATTERN RECOGNITION MODE
+
+## DATA INPUT (Pre-processed)
+${JSON.stringify(enhancedData, null, 2)}
+
+## ANALYTICAL TASKS
+
+### A. PATTERN IDENTIFICATION
+Detect and classify price patterns in the data:
+1. Trend patterns: Uptrend/Downtrend/Sideways
+2. Reversal signals: Double tops/bottoms, breakouts
+3. Momentum divergences: Price vs. implied momentum
+
+### B. PROBABILISTIC FORECASTING
+For each ticker, estimate:
+- Next session close range (with confidence intervals)
+- Volatility expansion/contraction probability
+- Critical inflection points from the data
+
+### C. RISK-ADJUSTED RECOMMENDATIONS
+Apply position sizing based on:
+1. Data quality score (days available, completeness)
+2. Signal clarity (strong/weak pattern recognition)
+3. Correlation avoidance (if multiple tickers show similar patterns)
+
+### D. REPORT STRUCTURE
+[Market Structure Overview]
+[Pattern Recognition Summary]
+[Forward-Looking Scenarios: Bull/Base/Bear Cases]
+[Risk-Managed Trade Constructions]
+
+## CONSTRAINTS
+- NO EXTERNAL REFERENCES
+- NO TICKERS BEYOND: ${data.map((s) => s.ticker).join(", ")}
+- UNCERTAINTY QUANTIFICATION REQUIRED for all predictions
+- 200 word maximum, institutional tone`,
+    },
+    {
+      role: "user",
+      content:
+        "Execute full quantitative analysis with pattern-based predictions.",
+    },
+  ];
+};
+
+// Helper functions
+function calculateTrend(closes: number[]) {
+  if (closes.length < 2) return "insufficient data";
+  const first = closes[0];
+  const last = closes[closes.length - 1];
+  const change = (((last - first) / first) * 100).toFixed(2);
+  return `${parseFloat(change) >= 0 ? "+" : ""}${change}%`;
+}
+
+function calculateVolatility(results: any[]) {
+  const ranges = results.map((r) => ((r.h - r.l) / r.o) * 100);
+  const avg = ranges.reduce((a, b) => a + b, 0) / ranges.length;
+  return `Avg daily range: ${avg.toFixed(1)}%`;
+}
+
+function average(arr: number[]) {
+  return arr.reduce((a, b) => a + b, 0) / arr.length;
+}

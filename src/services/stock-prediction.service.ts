@@ -9,25 +9,24 @@ import { HTTP_STATUS } from "../config/http.config.js";
 import { ErrorCode } from "../enums/error-code.enum.js";
 import { BadRequestExceptionError } from "../errors/bad-request.error.js";
 import { AppError } from "../errors/app.error.js";
-import { Dates } from "../utils/Dates.js";
+import { Dates } from "../utils/Dates.ts";
 
 class StockPredictionService {
   public fetchStockData = async (param: StockDataParam): Promise<any> => {
-    const dates = {
-      startDate: Dates.getDateNDaysAgo(3),
-      endDate: Dates.getDateNDaysAgo(1),
-    };
+    const { tickersArr, dates } = param;
+    const startDate = dates.startDate;
+    const endDate = dates.endDate;
 
     try {
       const stockData = await Promise.all(
-        param.tickersArr.map(async (ticker: string) => {
+        tickersArr.map(async (ticker: string) => {
           const response = await axios.get(
-            `${polygonWorkerUrl}?ticker=${ticker}&startDate=${dates.startDate}&endDate=${dates.endDate}`
+            `${polygonWorkerUrl}?ticker=${ticker}&startDate=${startDate}&endDate=${endDate}`
           );
 
           if (!response.status) {
             throw new BadRequestExceptionError(
-              "Error fetching stock data",
+              "Polygon Worker: Worker Error",
               HTTP_STATUS.BAD_REQUEST,
               ErrorCode.RESOURCE_NOT_FOUND
             );
@@ -37,20 +36,31 @@ class StockPredictionService {
         })
       );
 
-      const data = await this.fetchReport(stockData);
-      return data;
+      console.log("Stock data", stockData);
+
+      try {
+        const data = await this.fetchReport(stockData);
+        return data;
+      } catch (error) {
+        if (error instanceof AppError) {
+          throw error;
+        }
+
+        if (error instanceof Error) {
+          throw new Error(error.message);
+        }
+
+        throw error;
+      }
     } catch (error) {
       if (error instanceof AppError) {
+        console.log(`${error.message}`);
         throw error;
       }
 
       if (error instanceof Error) {
-        console.error("Error fetching stock data:", error.message);
-        throw new InternalServerError(
-          error.message,
-          HTTP_STATUS.INTERNAL_SERVER_ERROR,
-          ErrorCode.INTERNAL_SERVER_ERROR
-        );
+        console.log(`${error.message}`);
+        throw new Error(error.message);
       }
 
       throw error;
@@ -71,19 +81,21 @@ class StockPredictionService {
       const status = response.status;
       if (status !== 200) {
         throw new BadRequestExceptionError(
-          "Worker Error",
+          "Mistral Worker: Worker Error",
           HTTP_STATUS.BAD_REQUEST,
           ErrorCode.RESOURCE_NOT_FOUND
         );
       }
-      const data = response.data;
+      const data = response.data as any;
       return data;
     } catch (error) {
       if (error instanceof AppError) {
+        console.error(`${error.message}`);
         throw error;
       }
 
       if (error instanceof Error) {
+        console.error(`${error.message}`);
         throw new Error(error.message);
       }
 

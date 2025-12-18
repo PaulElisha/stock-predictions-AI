@@ -29,7 +29,8 @@ export default {
 		});
 
 		try {
-			const messages = (await request.json()) as Array<any>;
+			const messages = (await request.json()) as any;
+			console.log('Messages', messages);
 			const response = await mistral.chat.complete({
 				model: 'mistral-large-latest',
 				messages,

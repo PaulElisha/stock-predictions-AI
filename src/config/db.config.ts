@@ -1,16 +1,10 @@
 /** @format */
 
 import mongoose from "mongoose";
+import { mongoURI } from "../constants/constants.ts";
 
 class Db {
   connect() {
-    const mongoURI = process.env.MONGODB_URI || "mongodb://localhost:27017/";
-
-    if (!mongoURI || mongoURI === "mongodb://localhost:27017/") {
-      console.warn("MongoDB URI not configured, skipping database connection");
-      return;
-    }
-
     try {
       mongoose.connect(mongoURI);
 
@@ -23,7 +17,6 @@ class Db {
       });
     } catch (error) {
       console.error("Error connecting to MongoDB:", error);
-      // Don't exit in serverless environments
     }
   }
 }

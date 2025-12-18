@@ -34,7 +34,7 @@ export default {
 			const response = await fetch(`${env.POLYGON_BASE_URL}/${ticker}/range/1/day/${startDate}/${endDate}?apiKey=${env.POLYGON_API_KEY}`);
 			const status = response.ok;
 			if (!status) {
-				throw new BadRequestExceptionError('Error fetching stock data', HTTP_STATUS.BAD_REQUEST, ErrorCode.RESOURCE_NOT_FOUND);
+				throw new BadRequestExceptionError('Polygon API: Error fetching stock data', HTTP_STATUS.BAD_REQUEST, ErrorCode.RESOURCE_NOT_FOUND);
 			}
 			const data = (await response.json()) as any;
 			delete data.request_id;

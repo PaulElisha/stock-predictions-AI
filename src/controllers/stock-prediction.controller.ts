@@ -18,12 +18,11 @@ class StockPredictionController {
 
   public fetchStockData = async (req: Request, res: Response): Promise<any> => {
     try {
-      const { tickersArr } = req.body;
-      // const tickersArr = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA"];
+      const { tickersArr, dates } = req.body;
 
       if (!Array.isArray(tickersArr) || tickersArr.length == 0) {
         throw new BadRequestExceptionError(
-          "Invalid request parameters",
+          "Validation error",
           HTTP_STATUS.BAD_REQUEST,
           ErrorCode.VALIDATION_ERROR
         );
@@ -31,60 +30,39 @@ class StockPredictionController {
 
       const reportData = await this.stockPredictionService.fetchStockData({
         tickersArr,
+        dates,
       });
-      console.log(reportData);
+
+      if (!reportData) {
+        throw new BadRequestExceptionError(
+          "Report data not found",
+          HTTP_STATUS.NOT_FOUND,
+          ErrorCode.RESOURCE_NOT_FOUND
+        );
+      }
+      console.log("Report data", reportData);
 
       return res
         .status(HTTP_STATUS.OK)
         .json({ message: "Stock Report fetched successfully", reportData });
     } catch (error) {
       if (error instanceof AppError) {
+        console.log(`${error.message}`);
         return res.status(error.statusCode).json({ message: error.message });
       }
 
       if (error instanceof Error) {
+        console.log(`${error.message}`);
         return res
           .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
-          .json({ message: "Internal Server Error" });
+          .json({ message: error.message });
       }
 
       return res
         .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
-        .json({ message: "Internal Server Error" });
+        .json({ message: error });
     }
   };
-  //   try {
-  //     const response = await axios.post(
-  //       openAIWorkerUrl,
-  //       JSON.stringify(messages(stockData)),
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //       }
-  //     );
-  //     const status = response.status;
-  //     if (status !== 200) {
-  //       throw new BadRequestExceptionError(
-  //         "Worker Error",
-  //         HTTP_STATUS.BAD_REQUEST,
-  //         ErrorCode.RESOURCE_NOT_FOUND
-  //       );
-  //     }
-  //     const data = response.data;
-  //     return data;
-  //   } catch (error) {
-  //     if (error instanceof AppError) {
-  //       throw error;
-  //     }
-
-  //     if (error instanceof Error) {
-  //       throw new Error(error.message);
-  //     }
-
-  //     throw error;
-  //   }
-  // };
 }
 
 export type StockPredictionControllerInstance = StockPredictionController;

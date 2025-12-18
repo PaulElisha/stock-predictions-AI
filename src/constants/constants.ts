@@ -1,34 +1,25 @@
 /** @format */
 
-import { getEnv } from "../config/env.helper.js";
+import { envConfig } from "../config/env.config.ts";
 
-export const port = getEnv("PORT", "3000");
-export const hostName = getEnv("HOST_NAME", "http://localhost");
-export const mongoURI = getEnv("MONGODB_URI", "mongodb://localhost:27017/");
-export const openAIApiKey = getEnv("OPENAI_API_KEY");
-export const polygonApiKey = getEnv("POLYGON_API_KEY");
-export const polygonUrl = getEnv("POLYGON_BASE_URL", "https://api.polygon.io");
-export const openAIWorkerUrl = getEnv("OPENAI_WORKER_URL");
-export const polygonWorkerUrl = getEnv("POLYGON_WORKER_URL");
-export const mistralServerUrl = getEnv(
-  "MISTRAL_SERVER_URL",
-  "https://api.mistral.ai"
-);
-export const mistralAiApiKey = getEnv("MISTRAL_AI_API_KEY");
+export const port = envConfig.PORT;
+export const hostName = envConfig.HOST_NAME;
+export const mongoURI = envConfig.MONGODB_URI;
+export const openAIApiKey = envConfig.OPENAI_API_KEY;
+export const polygonApiKey = envConfig.POLYGON_API_KEY;
+export const polygonUrl = envConfig.POLYGON_BASE_URL;
+export const openAIWorkerUrl = envConfig.OPENAI_WORKER_URL;
+export const polygonWorkerUrl = envConfig.POLYGON_WORKER_URL;
+export const mistralServerUrl = envConfig.MISTRAL_SERVER_URL;
+export const mistralAiApiKey = envConfig.MISTRAL_AI_API_KEY;
 
-// Helper functions to get dates (avoiding circular dependency)
-function formatDate(date: Date) {
-  const yyyy = date.getFullYear();
-  const mm = String(date.getMonth() + 1).padStart(2, "0");
-  const dd = String(date.getDate()).padStart(2, "0");
-  return `${yyyy}-${mm}-${dd}`;
-}
-
-function getDateNDaysAgo(n: number) {
-  const now = new Date();
-  now.setDate(now.getDate() - n);
-  return formatDate(now);
-}
-
-export const startDate = getDateNDaysAgo(3);
-export const endDate = getDateNDaysAgo(1);
+// console.log("Host Name", mongoURI);
+// console.log("Port ", port);
+// console.log("hostName", hostName);
+// console.log("openAIApiKey", openAIApiKey);
+// console.log("polygonApiKey", polygonApiKey);
+// console.log("polygonUrl", polygonUrl);
+// console.log("openAIWorkerUrl", openAIWorkerUrl);
+// console.log("polygonWorkerUrl", polygonWorkerUrl);
+// console.log("mistralServerUrl", mistralServerUrl);
+// console.log("mistralAiApiKey", mistralAiApiKey);
