@@ -4,12 +4,10 @@ import axios from "axios";
 import { openAIWorkerUrl, polygonWorkerUrl } from "../constants/constants.js";
 import type { StockDataParam } from "../types/paramters/parameters.types.js";
 import { messages } from "../utils/messages.utils.js";
-import { InternalServerError } from "../errors/internal-server.error.js";
 import { HTTP_STATUS } from "../config/http.config.js";
 import { ErrorCode } from "../enums/error-code.enum.js";
 import { BadRequestExceptionError } from "../errors/bad-request.error.js";
 import { AppError } from "../errors/app.error.js";
-import { Dates } from "../utils/Dates.ts";
 
 class StockPredictionService {
   public fetchStockData = async (param: StockDataParam): Promise<any> => {
