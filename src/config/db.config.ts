@@ -1,24 +1,32 @@
-  /** @format */
+/** @format */
 
 import mongoose from "mongoose";
 import { mongoURI } from "../constants/constants.js";
 
-class Db {
-  connect() { 
+export class Db {
+  private connectionPromise: Promise<typeof mongoose> | null = null;
+
+  connect = async () => {
+    if (!mongoURI) {
+      throw new Error("MONGODB_URI is not defined");
+    }
+
+    if (mongoose.connection.readyState === 1) {
+      return Promise.resolve(mongoose);
+    }
+
+    if (this.connectionPromise) {
+      return this.connectionPromise;
+    }
+
     try {
-      mongoose.connect(mongoURI);
-
-      mongoose.connection.on("connected", () => {
-        console.log("MongoDB connected successfully");
-      });
-
-      mongoose.connection.on("error", (err) => {
-        console.error("MongoDB connection error:", err.message);
+      this.connectionPromise = mongoose.connect(mongoURI);
+      return this.connectionPromise.finally(() => {
+        this.connectionPromise = null;
       });
     } catch (error) {
       console.error("Error connecting to MongoDB:", error);
+      throw error;
     }
-  }
+  };
 }
-
-export { Db };

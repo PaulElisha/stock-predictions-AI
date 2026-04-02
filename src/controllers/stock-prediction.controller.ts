@@ -33,18 +33,18 @@ class StockPredictionController {
         dates,
       });
 
-      if (!reportData) {
+      if (!reportData || typeof reportData.content !== "string") {
         throw new BadRequestExceptionError(
           "Report data not found",
           HTTP_STATUS.NOT_FOUND,
           ErrorCode.RESOURCE_NOT_FOUND,
         );
       }
-      console.log("Report data", JSON.stringify(reportData, null, 2));
+      console.log("Report data", JSON.stringify(reportData.content, null, 2));
 
       return res
         .status(HTTP_STATUS.OK)
-        .json({ message: "Stock Report fetched successfully", reportData });
+        .json({ message: "Stock Report fetched successfully", content: reportData.content });
     } catch (error) {
       if (error instanceof AppError) {
         console.log(`${error.message}`);

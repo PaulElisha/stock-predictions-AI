@@ -11,4 +11,5 @@ export type EnvConfig = {
   POLYGON_WORKER_URL: string;
   OPENAI_WORKER_URL: string;
   MISTRAL_SERVER_URL: string;
+  CORS_ORIGIN: string;
 };

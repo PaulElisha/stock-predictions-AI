@@ -1,8 +1,7 @@
 import { Mistral } from '@mistralai/mistralai';
 
 import { HTTP_STATUS } from '../../../config/http.config';
-import { ErrorCode } from '../../../enums/error-code.enum';
-import { InternalServerError } from '../../../errors/internal-server.error';
+
 import { AppError } from '../../../errors/app.error';
 
 const corsHeaders = {
@@ -62,7 +61,7 @@ export default {
 		});
 
 		try {
-			const messages = (await request.json()) as any;
+			const { messages } = (await request.json()) as unknown as { messages: any[] };
 			console.log('Messages', messages);
 			const encoder = new TextEncoder();
 			const stream = new ReadableStream({

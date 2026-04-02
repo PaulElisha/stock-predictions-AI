@@ -36,7 +36,7 @@ class StockPredictionService {
             return response.data as any;
           }, tickersArr);
         },
-        async (stockData: any) => {
+        async (stockData: any[]) => {
           console.log("Stock data", stockData);
 
           return await this.fetchReport(stockData);
@@ -71,7 +71,7 @@ class StockPredictionService {
     }
   };
 
-  private fetchReport = async (stockData: any): Promise<any> => {
+  private fetchReport = async (stockData: any[]): Promise<any> => {
     try {
       const response = await axios.post(openAIWorkerUrl, JSON.stringify(messages(stockData)), {
         headers: {

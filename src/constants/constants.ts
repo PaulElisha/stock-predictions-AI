@@ -3,7 +3,7 @@
 import { envConfig } from "../config/env.config.js";
 
 export const port = envConfig.PORT;
-export const hostName = envConfig.HOST_NAME;        
+export const hostName = envConfig.HOST_NAME;
 export const mongoURI = envConfig.MONGODB_URI;
 export const openAIApiKey = envConfig.OPENAI_API_KEY;
 export const polygonApiKey = envConfig.POLYGON_API_KEY;
@@ -12,6 +12,7 @@ export const openAIWorkerUrl = envConfig.OPENAI_WORKER_URL;
 export const polygonWorkerUrl = envConfig.POLYGON_WORKER_URL;
 export const mistralServerUrl = envConfig.MISTRAL_SERVER_URL;
 export const mistralAiApiKey = envConfig.MISTRAL_AI_API_KEY;
+export const corsOrigin = envConfig.CORS_ORIGIN;
 
 // console.log("Host Name", mongoURI);
 // console.log("Port ", port);

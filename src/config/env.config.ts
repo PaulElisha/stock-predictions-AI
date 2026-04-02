@@ -27,6 +27,7 @@ const getEnvConfig = (): EnvConfig => {
     OPENAI_WORKER_URL: getEnv("OPENAI_WORKER_URL"),
     MISTRAL_SERVER_URL: getEnv("MISTRAL_SERVER_URL"),
     MISTRAL_AI_API_KEY: getEnv("MISTRAL_AI_API_KEY"),
+    CORS_ORIGIN: getEnv("CORS_ORIGIN"),
   };
 };
 
