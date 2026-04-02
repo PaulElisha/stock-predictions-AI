@@ -177,15 +177,50 @@ npm run dev
 
 ## 📐 Architecture Overview
 
-The application follows a clean separation of concerns:
+The application follows a clean separation of concerns with a streaming-first approach:
 
-1.  **Controller (`src/controllers`)**: Handles incoming HTTP requests (e.g., `POST /api`). Validate inputs and delegates logic.
-2.  **Service (`src/services`)**: Contains business logic. Orchestrates calls to the external workers.
-    - Calls **Polygon Worker** to get raw stock data.
-    - Calls **OpenAI Worker** to analyze that data and generate a report.
+```mermaid
+sequenceDiagram
+    participant F as Frontend
+    participant B as Express Backend
+    participant PW as Polygon Worker
+    participant OW as OpenAI Worker
+    participant M as Mistral/OpenAI API
+
+    F->>B: POST /api/stock-prediction
+    Note over B: Initializing SSE Stream
+    B-->>F: HTTP 200 (text/event-stream)
+    
+    rect rgb(240, 240, 240)
+    Note right of B: Step 1: Data Retrieval (Pull)
+    B->>PW: GET /ticker-data
+    PW-->>B: JSON (Historical OHLC)
+    end
+
+    rect rgb(230, 245, 255)
+    Note right of B: Step 2: AI Analysis (Push/Stream)
+    B->>OW: POST /analyze (Stream Request)
+    OW->>M: Start Chat Stream
+    
+    loop Token Streaming
+        M-->>OW: Token Chunks
+        OW-->>B: SSE Chunks (data: "...")
+        B-->>F: SSE Chunks (Passthrough)
+    end
+    
+    M-->>OW: Stream Done
+    OW-->>B: Stream Done
+    B-->>F: Connection Closed
+    end
+```
+
+1.  **Controller (`src/controllers`)**: Handles incoming HTTP requests. For stock predictions, it immediately sets Server-Sent Events (SSE) headers to allow real-time token streaming to the frontend.
+2.  **Service (`src/services`)**: Orchestrates the multi-step process:
+    - **Data Pull**: Fetches structured stock data from the **Polygon Worker**.
+    - **Stream Passthrough**: Proxies the AI generation stream from the OpenAI Worker directly to the controller's response pipe.
 3.  **Workers (`src/workers`)**:
     - `polygon-worker`: Proxies requests to Polygon.io, handling authentication and formatting.
-    - `openai-worker`: Interfaces with AI models (Mistral/OpenAI) to generate text summaries based on the provided stock data.
+    - `openai-worker`: Interfaces with Mistral/OpenAI. It transforms the AI's native stream into standard SSE format (`data: "..."`) for the backend to consume.
 
 ## 🤝 Contributing
 
