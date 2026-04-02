@@ -17,7 +17,7 @@ class StockPredictionRoute {
   }
 
   public routes(): void {
-    this.router.post("/", this.stockPredictionController.generateStockReport);
+    this.router.post("/generate-stock-report", this.stockPredictionController.generateStockReport);
   }
 }
 
