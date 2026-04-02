@@ -27,11 +27,10 @@ class App {
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(
       cors({
-        origin: corsOrigin,
+        origin: corsOrigin || "*",
       }),
     );
     this.app.use(limiter);
-
   }
 
   async initializeDb() {
