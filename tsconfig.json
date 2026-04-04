@@ -47,8 +47,8 @@
     },
     "include": [
         "src/**/*.ts",
-        "api/**/*.ts"
-, "app.ts"    ],
+        "app.ts"
+    ],
     "exclude": [
         "node_modules",
         "dist"
