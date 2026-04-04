@@ -1,7 +1,7 @@
 /** @format */
 
 import HttpStatus from "@config/http.config.js";
-import ErrorCode from "../shared/enum/error-code";
+import ErrorCode from "@enum/error-code.js";
 import type { Request, Response, NextFunction } from "express";
 
 export type EnvConfig = {

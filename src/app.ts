@@ -5,12 +5,12 @@ import express from "express";
 import type { Express } from "express";
 import cors from "cors";
 import Db from "@config/db.config.js";
-import Envconfig from "@/env";
+import Envconfig from "@/env.js";
 import errorHandler from "@middleware/errorHandler.js";
 import limiter from "@config/limiter.config.js";
 
 import predictivRouter from "@module/predictiv/predictiv.route.js";
-import HttpStatus from "./config/http.config";
+import HttpStatus from "@config/http.config.js";
 
 class App {
   public app: Express;
