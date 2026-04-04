@@ -1,9 +1,9 @@
 /** @format */
+import type { Express } from "express";
 
 import express from "express";
-
-import type { Express } from "express";
 import cors from "cors";
+
 import Db from "@config/db.config.js";
 import Envconfig from "@/env.js";
 import errorHandler from "@middleware/errorHandler.js";
@@ -61,13 +61,13 @@ const appInstance = new App();
 const app = appInstance.app;
 
 // Start server locally; on Vercel the app is exported as a serverless function
-// if (!process.env.VERCEL) {
-//   appInstance.startServer();
-// }
-
-if (process.env.VERCEL !== "1") {
+if (!process.env.VERCEL) {
   appInstance.startServer();
 }
+
+// if (process.env.VERCEL !== "1") {
+//   appInstance.startServer();
+// }
 
 export default app;
 export { app };
