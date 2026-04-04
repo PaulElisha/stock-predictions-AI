@@ -60,14 +60,8 @@ class App {
 const appInstance = new App();
 const app = appInstance.app;
 
-// Start server locally; on Vercel the app is exported as a serverless function
-if (!process.env.VERCEL) {
-  appInstance.startServer();
-}
-
-// if (process.env.VERCEL !== "1") {
-//   appInstance.startServer();
-// }
+// Start server
+appInstance.startServer();
 
 export default app;
 export { app };
