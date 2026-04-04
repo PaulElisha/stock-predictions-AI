@@ -65,7 +65,9 @@ const app = appInstance.app;
 //   appInstance.startServer();
 // }
 
-appInstance.startServer();
+if (process.env.VERCEL !== "1") {
+  appInstance.startServer();
+}
 
 export default app;
 export { app };
