@@ -9,10 +9,11 @@ import BadRequestExceptionError from "@error/bad-request.js";
 import Envconfig from "@/env.js";
 import Messages from "@util/Messages.js";
 
-import type { StockDataParam } from "@type/types.js";
+import type { StockDataParam, Result } from "@type/types.js";
+import AppError from "@/src/shared/error/app-error";
 
 class PredictivService {
-  public generateStockReport = async (param: StockDataParam): Promise<any> => {
+  public generateStockReport = async (param: StockDataParam): Result<any, AppError> => {
     const { tickersArr, dates } = param;
     const startDate = dates.startDate;
     const endDate = dates.endDate;
@@ -26,11 +27,14 @@ class PredictivService {
             );
 
             if (!response.status) {
-              throw new BadRequestExceptionError(
-                "Polygon Worker: Worker Error",
-                HttpStatus.BAD_REQUEST,
-                ErrorCode.RESOURCE_NOT_FOUND,
-              );
+              return [
+                null,
+                new BadRequestExceptionError(
+                  "Polygon Worker: Worker Error",
+                  HttpStatus.BAD_REQUEST,
+                  ErrorCode.RESOURCE_NOT_FOUND,
+                ),
+              ];
             }
 
             return <any>response.data;
@@ -39,21 +43,24 @@ class PredictivService {
         async (stockData: any[]) => {
           console.log("Stock data", stockData);
 
-          return await this.fetchReport(stockData);
+          const [data, error] = await this.fetchReport(stockData);
+
+          if (error) return [null, error];
+
+          return [data, null];
         },
       ]);
 
-      try {
-        return await awaitingReport();
-      } catch (error) {
-        throw error;
-      }
+      const [data, error] = await awaitingReport();
+
+      if (error) return [null, <AppError>error];
+      return [data, null];
     } catch (error) {
-      throw error;
+      return [null, <AppError>error];
     }
   };
 
-  private fetchReport = async (stockData: any[]): Promise<any> => {
+  private fetchReport = async (stockData: any[]): Result<any, AppError> => {
     try {
       const response = await axios.post(Envconfig.OPENAI_WORKER_URL, Messages(stockData), {
         headers: {
@@ -63,16 +70,19 @@ class PredictivService {
       });
 
       if (response.status !== 200) {
-        throw new BadRequestExceptionError(
-          "Mistral Worker: Worker Error",
-          HttpStatus.BAD_REQUEST,
-          ErrorCode.RESOURCE_NOT_FOUND,
-        );
+        return [
+          null,
+          new BadRequestExceptionError(
+            "Mistral Worker: Worker Error",
+            HttpStatus.BAD_REQUEST,
+            ErrorCode.RESOURCE_NOT_FOUND,
+          ),
+        ];
       }
       console.log("Response data", response.data);
-      return <any>response.data;
+      return [response.data, null];
     } catch (error) {
-      throw error;
+      return [null, <AppError>error];
     }
   };
 }

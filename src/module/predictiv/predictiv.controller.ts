@@ -1,28 +1,33 @@
 /** @format */
 
 import HttpStatus from "@config/http.config.js";
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import PredictivService from "@module/predictiv/predictiv.service.js";
 import ErrorCode from "@enum/error-code.js";
 import BadRequestExceptionError from "@error/bad-request.js";
+import handleAsyncControl from "@/src/shared/middleware/handleAsyncControl";
 
 class PredictivController {
-  public generateStockReport = async (req: Request, res: Response): Promise<any> => {
-    try {
+  public generateStockReport = handleAsyncControl(
+    async (req: Request, res: Response, next: NextFunction): Promise<any> => {
       const { tickersArr, dates } = req.body;
 
       if (!Array.isArray(tickersArr) || tickersArr.length == 0) {
-        throw new BadRequestExceptionError(
-          "Validation error",
-          HttpStatus.BAD_REQUEST,
-          ErrorCode.VALIDATION_ERROR,
+        return next(
+          new BadRequestExceptionError(
+            "Validation error",
+            HttpStatus.BAD_REQUEST,
+            ErrorCode.VALIDATION_ERROR,
+          ),
         );
       }
 
-      const stream = await PredictivService.generateStockReport({
+      const [stream, error] = await PredictivService.generateStockReport({
         tickersArr,
         dates,
       });
+
+      if (error) next(error);
 
       if (!stream || typeof stream.pipe !== "function") {
         return res
@@ -51,10 +56,8 @@ class PredictivController {
       req.on("close", () => {
         stream.destroy();
       });
-    } catch (error) {
-      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: error });
-    }
-  };
+    },
+  );
 }
 
 export default new PredictivController();
