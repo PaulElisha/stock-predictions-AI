@@ -1,9 +1,9 @@
 import { Mistral } from '@mistralai/mistralai';
 import { ContentChunk } from '@mistralai/mistralai/models/components';
 
-import { HTTP_STATUS } from '../../../config/http.config';
+import HttpStatus from '@config/http.config.js';
 
-import { AppError } from '../../../errors/app.error';
+import AppError from '@error/app-error.js';
 
 const corsHeaders = {
 	'Access-Control-Allow-Origin': '*',
@@ -86,14 +86,14 @@ export default {
 
 			return new Response(stream, {
 				headers: { ...corsHeaders, 'Content-Type': 'text/event-stream' },
-				status: HTTP_STATUS.OK,
+				status: HttpStatus.OK,
 			});
 		} catch (error) {
 			console.error('Worker fetch caught an error:', error);
 			if (error instanceof Error) {
 				return new Response(JSON.stringify({ error: error.message }), {
 					headers: corsHeaders,
-					status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+					status: HttpStatus.INTERNAL_SERVER_ERROR,
 				});
 			}
 
@@ -106,7 +106,7 @@ export default {
 
 			return new Response(JSON.stringify({ error: error }), {
 				headers: corsHeaders,
-				status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+				status: HttpStatus.INTERNAL_SERVER_ERROR,
 			});
 		}
 	},

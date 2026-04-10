@@ -19,16 +19,16 @@
                 "./src/type/*"
             ],
             "@util/*": [
-                "./src/shared/util/*"
+                "src/shared/util/*"
             ],
             "@enum/*": [
-                "./src/shared/enum/*"
+                "src/shared/enum/*"
             ],
             "@error/*": [
-                "./src/shared/error/*"
+                "src/shared/error/*"
             ],
             "@middleware/*": [
-                "./src/shared/middleware/*"
+                "src/shared/middleware/*"
             ]
         },
         "noEmit": true,
@@ -42,7 +42,10 @@
         "module": "ES2022",
         "target": "ES2022",
         "strict": true,
+        "strictNullChecks": true,
+        "strictPropertyInitialization": true,
         "allowSyntheticDefaultImports": true,
+        "useUnknownInCatchVariables": true,
         "allowJs": true
     },
     "include": [

@@ -1,9 +1,12 @@
 import axios from 'axios';
 
-import { HTTP_STATUS } from '../../../config/http.config';
-import { BadRequestExceptionError } from '../../../errors/bad-request.error';
-import { ErrorCode } from '../../../enums/error-code.enum';
-import { AppError } from '../../../errors/app.error';
+import HttpStatus from '@config/http.config.js';
+
+import AppError from '@error/app-error.js';
+
+import BadRequestExceptionError from '@error/bad-request.js';
+
+import ErrorCode from '@enum/error-code.js';
 
 const corsHeaders = {
 	'Access-Control-Allow-Origin': '*',
@@ -25,7 +28,7 @@ export default {
 		if (!ticker || !startDate || !endDate) {
 			throw new BadRequestExceptionError(
 				'Ticker, startDate, and endDate are required',
-				HTTP_STATUS.BAD_REQUEST,
+				HttpStatus.BAD_REQUEST,
 				ErrorCode.RESOURCE_NOT_FOUND,
 			);
 		}
@@ -36,22 +39,22 @@ export default {
 			const response = await fetch(url);
 
 			if (!response.ok) {
-				throw new BadRequestExceptionError('Polygon API: Error fetching stock data', HTTP_STATUS.BAD_REQUEST, ErrorCode.RESOURCE_NOT_FOUND);
+				throw new BadRequestExceptionError('Polygon API: Error fetching stock data', HttpStatus.BAD_REQUEST, ErrorCode.RESOURCE_NOT_FOUND);
 			}
 
 			const { request_id, ...data } = (await response.json()) as any;
 
-			return new Response(JSON.stringify(data), { headers: corsHeaders, status: HTTP_STATUS.OK });
+			return new Response(JSON.stringify(data), { headers: corsHeaders, status: HttpStatus.OK });
 		} catch (error) {
 			if (error instanceof Error) {
-				return new Response(error.message, { status: HTTP_STATUS.INTERNAL_SERVER_ERROR });
+				return new Response(error.message, { status: HttpStatus.INTERNAL_SERVER_ERROR });
 			}
 
 			if (error instanceof AppError) {
 				return new Response(error.message, { status: error.statusCode });
 			}
 
-			return new Response('Internal Server Error', { status: HTTP_STATUS.INTERNAL_SERVER_ERROR });
+			return new Response('Internal Server Error', { status: HttpStatus.INTERNAL_SERVER_ERROR });
 		}
 	},
 } satisfies ExportedHandler<Env>;

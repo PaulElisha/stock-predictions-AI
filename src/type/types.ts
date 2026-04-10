@@ -1,7 +1,7 @@
 /** @format */
 
 import HttpStatus from "@config/http.config.js";
-import ErrorCode from "@enum/error-code.js";
+import ErrorCode from "@/src/shared/enum/error-code.js";
 import type { Request, Response, NextFunction } from "express";
 
 export type Result<T, U> = Promise<[T | null, null | U]>;

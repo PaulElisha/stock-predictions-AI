@@ -6,7 +6,7 @@ import cors from "cors";
 
 import Db from "@config/db.config.js";
 import Envconfig from "@/env.js";
-import errorHandler from "@middleware/errorHandler.js";
+import errorHandler from "@/src/shared/middleware/errorHandler.js";
 import limiter from "@config/limiter.config.js";
 
 import predictivRouter from "@module/predictiv/predictiv.route.js";

@@ -4,10 +4,10 @@ import axios from "axios";
 import FA from "fasy";
 
 import HttpStatus from "@config/http.config.js";
-import ErrorCode from "@enum/error-code.js";
-import BadRequestExceptionError from "@error/bad-request.js";
+import ErrorCode from "@/src/shared/enum/error-code.js";
+import BadRequestExceptionError from "@/src/shared/error/bad-request.js";
 import Envconfig from "@/env.js";
-import Messages from "@util/Messages.js";
+import Messages from "@/src/shared/util/Messages.js";
 
 import type { StockDataParam, Result } from "@type/types.js";
 import AppError from "@/src/shared/error/app-error";
