@@ -29,7 +29,7 @@ class PredictivService {
 
     const awaitingReport = await FA.serial.pipe([
       async () => {
-        return await FA.serial.map(async (ticker: string) => {
+        return await FA.concurrent.map(async (ticker: string) => {
           try {
             const response = await axios.get(
               `${Envconfig.POLYGON_WORKER_URL}?ticker=${ticker}&startDate=${startDate}&endDate=${endDate}`,
@@ -49,8 +49,14 @@ class PredictivService {
 
             return <any>response.data;
           } catch (error: any) {
-            console.error(`Failed to fetch data for ticker ${ticker}:`, error.message);
-            return { ticker, error: true };
+            return [
+              null,
+              new BadRequestExceptionError(
+                "Polygon Worker: Worker Error",
+                HttpStatus.BAD_REQUEST,
+                ErrorCode.RESOURCE_NOT_FOUND,
+              ),
+            ];
           }
         }, tickersArr);
       },

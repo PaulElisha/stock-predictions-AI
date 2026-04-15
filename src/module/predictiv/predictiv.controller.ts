@@ -22,16 +22,6 @@ class PredictivController {
         );
       }
 
-      if (!dates || !dates.startDate || !dates.endDate) {
-        return next(
-          new BadRequestExceptionError(
-            "Validation error: Missing dates.startDate or dates.endDate",
-            HttpStatus.BAD_REQUEST,
-            ErrorCode.VALIDATION_ERROR,
-          ),
-        );
-      }
-
       const abortController = new AbortController();
 
       const [stream, error] = await PredictivService.generateStockReport({
