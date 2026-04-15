@@ -3,6 +3,7 @@ import type { Express } from "express";
 
 import express from "express";
 import cors from "cors";
+import morgan from "morgan";
 
 import Db from "@config/db.config.js";
 import Envconfig from "@/env.js";
@@ -33,6 +34,7 @@ class App {
       }),
     );
     this.app.use(limiter);
+    this.app.use(morgan("dev"));
   }
 
   async initializeDb() {

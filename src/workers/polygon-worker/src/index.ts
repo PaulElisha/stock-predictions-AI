@@ -46,15 +46,15 @@ export default {
 
 			return new Response(JSON.stringify(data), { headers: corsHeaders, status: HttpStatus.OK });
 		} catch (error) {
-			if (error instanceof Error) {
-				return new Response(error.message, { status: HttpStatus.INTERNAL_SERVER_ERROR });
-			}
-
 			if (error instanceof AppError) {
-				return new Response(error.message, { status: error.statusCode });
+				return new Response(error.message, { status: error.statusCode, headers: corsHeaders });
 			}
 
-			return new Response('Internal Server Error', { status: HttpStatus.INTERNAL_SERVER_ERROR });
+			if (error instanceof Error) {
+				return new Response(error.message, { status: HttpStatus.INTERNAL_SERVER_ERROR, headers: corsHeaders });
+			}
+
+			return new Response('Internal Server Error', { status: HttpStatus.INTERNAL_SERVER_ERROR, headers: corsHeaders });
 		}
 	},
 } satisfies ExportedHandler<Env>;

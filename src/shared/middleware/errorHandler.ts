@@ -4,15 +4,7 @@ import type { NextFunction, Request, Response } from "express";
 import AppError from "../error/app-error.js";
 
 const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error(err);
-  if (err instanceof SyntaxError) {
-    return res.status(400).json({
-      message: "Bad Request",
-      error: err.message || "Unknown error occurred",
-      status: "error",
-    });
-  }
-
+  console.log("Error", err);
   if (err instanceof AppError) {
     return res.status(err.statusCode).json({
       message: err.message,
