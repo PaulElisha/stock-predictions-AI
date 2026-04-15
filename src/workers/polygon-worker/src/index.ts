@@ -25,6 +25,13 @@ export default {
 		const startDate = url.searchParams.get('startDate');
 		const endDate = url.searchParams.get('endDate');
 
+		if (!ticker || !startDate || !endDate) {
+			return new Response(
+				JSON.stringify({ error: 'Missing required query params: ticker, startDate, endDate' }),
+				{ status: 400, headers: corsHeaders },
+			);
+		}
+
 		try {
 			const url = `${env.POLYGON_BASE_URL}/${ticker}/range/1/day/${startDate}/${endDate}?apiKey=${env.POLYGON_API_KEY}`;
 
@@ -38,8 +45,9 @@ export default {
 
 			return new Response(JSON.stringify(data), { headers: corsHeaders, status: HttpStatus.OK });
 		} catch (error: any) {
-			return new Response(JSON.stringify({ error: error?.message }), {
-				status: error?.statusCode,
+			const statusCode: number = typeof error?.statusCode === 'number' ? error.statusCode : 500;
+			return new Response(JSON.stringify({ error: error?.message ?? 'Internal server error' }), {
+				status: statusCode,
 				headers: corsHeaders,
 			});
 		}

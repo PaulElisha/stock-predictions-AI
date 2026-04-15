@@ -22,16 +22,6 @@ class PredictivController {
         );
       }
 
-      if (!dates || !dates.startDate || !dates.endDate) {
-        return next(
-          new BadRequestExceptionError(
-            "Validation error",
-            HttpStatus.BAD_REQUEST,
-            ErrorCode.VALIDATION_ERROR,
-          ),
-        );
-      }
-
       const abortController = new AbortController();
 
       const [stream, error] = await PredictivService.generateStockReport({
@@ -58,11 +48,9 @@ class PredictivController {
 
       stream.on("error", (err: Error) => {
         console.error("Stream error:", err.message);
-        res.write(`data: ${JSON.stringify({ error: err.message })}\n\n`);
-        res.end();
-      });
-
-      stream.on("end", () => {
+        if (!res.headersSent) {
+          res.write(`data: ${JSON.stringify({ error: err.message })}\n\n`);
+        }
         res.end();
       });
 

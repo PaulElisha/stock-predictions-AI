@@ -14,16 +14,18 @@ import type { StockDataParam, Result } from "@type/types.js";
 import AppError from "@/src/shared/error/app-error";
 
 class PredictivService {
-  public generateStockReport = async (param: StockDataParam): Result<any, any> => {
-    const { tickersArr, dates, signal } = param;
-    const startDate = dates.startDate;
-    const endDate = dates.endDate;
-
+  constructor() {
     axiosRetry(axios, {
       retries: 3,
       retryDelay: axiosRetry.exponentialDelay,
       retryCondition: (error) => axiosRetry.isNetworkOrIdempotentRequestError(error),
     });
+  }
+
+  public generateStockReport = async (param: StockDataParam): Result<any, any> => {
+    const { tickersArr, dates, signal } = param;
+    const startDate = dates.startDate;
+    const endDate = dates.endDate;
 
     const awaitingReport = await FA.serial.pipe([
       async () => {
@@ -71,7 +73,7 @@ class PredictivService {
             { timeout: 5000 },
           );
 
-          if (!response || !response.status) {
+          if (!response || response.status >= 400) {
             return [
               null,
               new BadRequestExceptionError(

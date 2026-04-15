@@ -1,8 +1,12 @@
 /** @format */
 
-const Messages = (data: any, marketContext = "neutral") => {
-  const tickers = data.map((stock: { ticker: string }) => stock.ticker);
-  const dataPoints = data[0]?.results?.length || 0;
+const Messages = (data: any[], marketContext = "neutral") => {
+  // Filter out any error objects returned by the polygon worker
+  const validData = data.filter(
+    (stock) => stock && typeof stock === "object" && stock.ticker && !stock.error,
+  );
+
+  const tickers = validData.map((stock: { ticker: string }) => stock.ticker);
 
   return [
     {
@@ -32,7 +36,7 @@ Structure follows this exact flow:
 
 # DATA TO SYNTHESIZE
 ${JSON.stringify(
-  data.map((stock: any) => ({
+  validData.map((stock: any) => ({
     ticker: stock.ticker,
     trend: stock.results
       ? stock.results[stock.results.length - 1]?.c > stock.results[0]?.o
