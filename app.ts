@@ -2,13 +2,13 @@
 import type { Express } from "express";
 
 import express from "express";
-import cors from "cors";
 import morgan from "morgan";
 
 import Db from "@config/db.config.js";
 import Envconfig from "@/env.js";
 import errorHandler from "@/src/shared/middleware/errorHandler.js";
 import limiter from "@config/limiter.config.js";
+import cors from "@config/cors.config.js";
 
 import predictivRouter from "@module/predictiv/predictiv.route.js";
 import HttpStatus from "@config/http.config.js";
@@ -27,12 +27,7 @@ class App {
   initializeMiddleware() {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
-    this.app.use(
-      cors({
-        origin: Envconfig.CORS_ORIGIN || "*",
-        credentials: true,
-      }),
-    );
+    this.app.use(cors);
     this.app.use(limiter);
     this.app.use(morgan("dev"));
   }
