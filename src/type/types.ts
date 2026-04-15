@@ -26,6 +26,7 @@ export type StockDataParam = {
     startDate: string;
     endDate: string;
   };
+  signal?: AbortSignal;
 };
 
 export type HttpStatusCodeType = (typeof HttpStatus)[keyof typeof HttpStatus];

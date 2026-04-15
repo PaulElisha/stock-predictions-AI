@@ -5,12 +5,16 @@ import HttpStatus from '@config/http.config.js';
 
 import AppError from '@error/app-error.js';
 
+import CAF from 'caf';
+import retry from 'async-retry';
+
 const corsHeaders = {
 	'Access-Control-Allow-Origin': '*',
 	'Access-Control-Allow-Methods': 'POST, OPTIONS',
 	'Access-Control-Allow-Headers': 'Content-Type',
 };
 
+/*
 async function* mistralStreamGenerator(mistral: Mistral, messages: any[], signal: AbortSignal): AsyncGenerator<string | ContentChunk[]> {
 	let attempts = 0;
 	const maxAttempts = 3;
@@ -45,6 +49,33 @@ async function* mistralStreamGenerator(mistral: Mistral, messages: any[], signal
 		}
 	}
 }
+*/
+
+const mistralStreamGenerator = CAF(async function* (signal: AbortSignal, mistral: Mistral, messages: any[]) {
+	const stream = await retry(
+		async (bail) => {
+			try {
+				return await mistral.chat.stream(
+					{
+						model: 'mistral-large-latest',
+						messages,
+					},
+					{ fetchOptions: { signal } },
+				);
+			} catch (error: any) {
+				if (error?.name === 'AbortError') return bail(error);
+				throw error;
+			}
+		},
+		{ retries: 2, factor: 2, minTimeout: 1000, maxTimeout: 5000 },
+	);
+
+	if (!stream) return;
+	for await (const chunk of stream) {
+		const content = chunk.data.choices?.[0]?.delta?.content;
+		if (content) yield content;
+	}
+});
 
 export default {
 	async fetch(request, env, ctx): Promise<Response> {
@@ -66,20 +97,36 @@ export default {
 		try {
 			const body = (await request.json()) as any;
 			const messages = Array.isArray(body) ? body : body.messages;
+
 			console.log('--- NEW REQUEST ---');
 			console.log('Received messages:', JSON.stringify(messages, null, 2));
+
 			const encoder = new TextEncoder();
 			const stream = new ReadableStream({
 				async start(controller) {
 					try {
-						for await (const token of mistralStreamGenerator(mistral, messages, request.signal)) {
+						for await (const token of mistralStreamGenerator(request.signal, mistral, messages)) {
 							console.log(`Token: ${token} - ${JSON.stringify(token, null, 2)}`);
+
 							controller.enqueue(encoder.encode(`data: ${JSON.stringify(token)}\n\n`));
+
+							while (controller.desiredSize != null && controller.desiredSize <= 0) {
+								await new Promise((resolve) => setTimeout(resolve, 10));
+							}
 						}
 						controller.close();
 					} catch (err) {
 						console.error(err);
-						controller.error(err);
+
+						if (CAF.isCAFError(err)) {
+							console.log('Stream successfully cancelled via CAF');
+							controller.close();
+							return;
+						}
+
+						const errorMessage = err instanceof Error ? err.message : 'Connection lost';
+						controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: errorMessage })}\n\n`));
+						controller.close();
 					}
 				},
 			});
@@ -90,20 +137,6 @@ export default {
 			});
 		} catch (error) {
 			console.error('Worker fetch caught an error:', error);
-			if (error instanceof Error) {
-				return new Response(JSON.stringify({ error: error.message }), {
-					headers: corsHeaders,
-					status: HttpStatus.INTERNAL_SERVER_ERROR,
-				});
-			}
-
-			if (error instanceof AppError) {
-				return new Response(JSON.stringify({ error: error.message }), {
-					headers: corsHeaders,
-					status: error.statusCode,
-				});
-			}
-
 			return new Response(JSON.stringify({ error: error }), {
 				headers: corsHeaders,
 				status: HttpStatus.INTERNAL_SERVER_ERROR,

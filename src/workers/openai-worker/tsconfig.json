@@ -48,6 +48,7 @@
 	],
 	"include": [
 		"worker-configuration.d.ts",
+		"declaration.d.ts",
 		"src/**/*.ts"
 	]
 }

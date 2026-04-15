@@ -50,7 +50,8 @@
     },
     "include": [
         "src/**/*.ts",
-        "app.ts"
+        "app.ts",
+        "declarations.d.ts"
     ],
     "exclude": [
         "node_modules",

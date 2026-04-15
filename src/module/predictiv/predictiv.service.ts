@@ -1,6 +1,7 @@
 /** @format */
 
 import axios from "axios";
+import axiosRetry from "axios-retry";
 import FA from "fasy";
 
 import HttpStatus from "@config/http.config.js";
@@ -18,15 +19,60 @@ class PredictivService {
     const startDate = dates.startDate;
     const endDate = dates.endDate;
 
+    axiosRetry(axios, {
+      retries: 3,
+      retryDelay: axiosRetry.exponentialDelay,
+      retryCondition: (error) => axiosRetry.isNetworkOrIdempotentRequestError(error),
+    });
+
     try {
       const awaitingReport = await FA.serial.pipe([
         async () => {
           return await FA.concurrent.map(async (ticker: string) => {
+            /*
+            let attempts = 0;
+            const maxAttempts = 3;
+            while (attempts < maxAttempts) {
+              try {
+                const response = await axios.get(
+                  `${Envconfig.POLYGON_WORKER_URL}?ticker=${ticker}&startDate=${startDate}&endDate=${endDate}`,
+                  { timeout: 5000 }
+                );
+
+                if (!response.status) {
+                  return [
+                    null,
+                    new BadRequestExceptionError(
+                      "Polygon Worker: Worker Error",
+                      HttpStatus.BAD_REQUEST,
+                      ErrorCode.RESOURCE_NOT_FOUND,
+                    ),
+                  ];
+                }
+
+                return <any>response.data;
+              } catch (error) {
+                attempts++;
+                if (attempts === maxAttempts) {
+                  return [
+                    null,
+                    new BadRequestExceptionError(
+                      "Polygon Worker: Connection Error",
+                      HttpStatus.SERVICE_UNAVAILABLE,
+                      ErrorCode.INTERNAL_SERVER_ERROR,
+                    ),
+                  ];
+                }
+                await new Promise((res) => setTimeout(res, attempts * 1000));
+              }
+            }
+            */
             const response = await axios.get(
               `${Envconfig.POLYGON_WORKER_URL}?ticker=${ticker}&startDate=${startDate}&endDate=${endDate}`,
+              { timeout: 5000 },
             );
 
-            if (!response.status) {
+            if (!response || !response.status) {
               return [
                 null,
                 new BadRequestExceptionError(
@@ -43,7 +89,7 @@ class PredictivService {
         async (stockData: any[]) => {
           console.log("Stock data", stockData);
 
-          const [data, error] = await this.fetchReport(stockData);
+          const [data, error] = await this.fetchReport(stockData, param.signal);
 
           if (error) return [null, error];
 
@@ -60,14 +106,22 @@ class PredictivService {
     }
   };
 
-  private fetchReport = async (stockData: any[]): Result<any, AppError> => {
+  private fetchReport = async (stockData: any[], signal?: AbortSignal): Result<any, AppError> => {
+    const fetchConfig = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      responseType: "stream" as const,
+      timeout: 1000000,
+      signal: signal,
+    };
+
     try {
-      const response = await axios.post(Envconfig.OPENAI_WORKER_URL, Messages(stockData), {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        responseType: "stream",
-      });
+      const response = await axios.post(
+        Envconfig.OPENAI_WORKER_URL,
+        Messages(stockData),
+        fetchConfig,
+      );
 
       if (response.status !== 200) {
         return [

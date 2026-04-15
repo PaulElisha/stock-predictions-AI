@@ -22,9 +22,12 @@ class PredictivController {
         );
       }
 
+      const abortController = new AbortController();
+
       const [stream, error] = await PredictivService.generateStockReport({
         tickersArr,
         dates,
+        signal: abortController.signal,
       });
 
       if (error) next(error);
@@ -54,6 +57,7 @@ class PredictivController {
       });
 
       req.on("close", () => {
+        abortController.abort();
         stream.destroy();
       });
     },
