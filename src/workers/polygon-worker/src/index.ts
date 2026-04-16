@@ -26,10 +26,10 @@ export default {
 		const endDate = url.searchParams.get('endDate');
 
 		if (!ticker || !startDate || !endDate) {
-			return new Response(
-				JSON.stringify({ error: 'Missing required query params: ticker, startDate, endDate' }),
-				{ status: 400, headers: corsHeaders },
-			);
+			return new Response(JSON.stringify({ error: 'Missing required query params: ticker, startDate, endDate' }), {
+				status: 400,
+				headers: corsHeaders,
+			});
 		}
 
 		try {
@@ -47,7 +47,7 @@ export default {
 		} catch (error: any) {
 			console.error(`Error in polygon-worker for ticker ${ticker}:`, error.message);
 			const statusCode: number = typeof error?.statusCode === 'number' ? error.statusCode : 500;
-			return new Response(JSON.stringify({ error: error?.message ?? 'Internal server error' }), {
+			return new Response(JSON.stringify({ error: error?.message }), {
 				status: statusCode,
 				headers: corsHeaders,
 			});

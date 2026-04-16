@@ -28,7 +28,7 @@ const mistralStreamGenerator = CAF(async function* (
 				throw error;
 			}
 		},
-		{ retries: 2, factor: 2, minTimeout: 1000, maxTimeout: 5000 },
+		{ retries: 2, factor: 2, minTimeout: 1000, maxTimeout: 10000 },
 	);
 
 	if (!stream) return;
